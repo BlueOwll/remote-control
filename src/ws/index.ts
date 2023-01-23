@@ -29,6 +29,7 @@ export const startWebSocket = () => {
           console.log(`<-- ${result}`);
           ws.send(result);
         } else {
+
           ws.send(`${data}`);
         }
       } catch(e) {
@@ -37,7 +38,10 @@ export const startWebSocket = () => {
       
 
     });
-  
+  process.on('SIGINT',() => {
+    wsserver.close();
+    process.exit();
+  })
     
   });
 }

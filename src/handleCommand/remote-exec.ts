@@ -1,4 +1,5 @@
-import { mouse, left, right, up, down, Point, Button, straightTo, Region, screen } from "@nut-tree/nut-js";
+import { mouse, left, right, up, down, Point, Button, straightTo, Region, screen, FileType } from "@nut-tree/nut-js";
+
 
 //export const DIRECTIONS_SET = new Set([ 'left', 'right', 'up', 'down']);
 export enum DIRECTIONS {
@@ -98,6 +99,7 @@ export const drawRect = async(value1: string, value2: string) => {
 }
 
 export const prntScr = async () => {
+  const scrnShotFile = 'screen-shot.png';
   const origin = await mouse.getPosition();
   const x0 = origin.x;
   const y0 = origin.y;
@@ -108,6 +110,8 @@ export const prntScr = async () => {
     regionToPrntScrSize,
     regionToPrntScrSize
     );
-  const img = screen.grabRegion(region);
+  //const img = screen.grabRegion(region);
+  return await screen.captureRegion(scrnShotFile, region,FileType.PNG);
+  
 
 }

@@ -1,4 +1,7 @@
 import { DIRECTIONS, drawCircle, drawRect, getMousePosition, moveMouse, POSITION, prntScr } from "./remote-exec";
+import fs from 'fs/promises';
+import { rm } from "fs";
+
 
 enum COMMANDS {
   mouse = "mouse",
@@ -31,7 +34,7 @@ export const handleCommand = async (commandInput: string) => {
         await handleDraw(param);
         break;
       case COMMANDS.prnt:
-        await handlePrnt(param);
+        result = await handlePrnt(param);
         break;
       default:
         throw new Error("Wrong command");
@@ -84,5 +87,13 @@ const handleDraw = async (paramsInput: string) => {
 };
 const handlePrnt = async (param: string) => {
   if(param !== COMMANDS.scrn) throw new Error('Wrong command');
-  return await prntScr();
+  const imgPath = await prntScr();
+  const buff = await fs.readFile(imgPath);
+  try {
+    await fs.rm(imgPath);
+  }catch{
+    // nothing to delete
+  } 
+  
+  return `${COMMANDS.prnt}_${COMMANDS.scrn} ${buff.toString('base64')}`;
 };
