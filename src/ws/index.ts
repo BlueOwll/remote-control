@@ -1,4 +1,4 @@
-import { WebSocketServer } from 'ws';
+import { WebSocketServer,  createWebSocketStream  } from 'ws';
 import config from '../config';
 import { handleCommand } from '../handleCommand';
 
@@ -19,7 +19,11 @@ export const startWebSocket = () => {
   
   wsserver.on('connection', (ws) => {
     console.log('Connection established');
-    ws.on('message', async (data) => {
+    const duplex = createWebSocketStream(ws, { encoding: 'utf8', decodeStrings: false });
+    duplex.setDefaultEncoding('utf8');
+
+
+    duplex.on('data', async (data) => {
       console.log(`--> ${data}`);
       try {
 
@@ -27,10 +31,10 @@ export const startWebSocket = () => {
         
         if (result) {
           console.log(`<-- ${result}`);
-          ws.send(result);
+          duplex.write(result);
         } else {
 
-          ws.send(`${data}`);
+         // duplex.write(`${data}`);
         }
       } catch(e) {
         console.log(`Error ${(e as Error).message} in command ${data} `);
@@ -38,10 +42,6 @@ export const startWebSocket = () => {
       
 
     });
-  process.on('SIGINT',() => {
-    wsserver.close();
-    process.exit();
-  })
     
   });
 }
