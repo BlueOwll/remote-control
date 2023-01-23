@@ -9,18 +9,18 @@ const port = config.port ? +config.port : DEFAULT_PORT;
 
 
 export const startWebSocket = () => {
-  const wsserver  = new WebSocketServer({ port: 8080 });
+  const wsserver  = new WebSocketServer({ port: port });
 
   if(wsserver) {
     console.log('Waiting for connection..');
   } else {
-    console.log('Websocket does not work');
+    console.log('WS Server does not work');
   }
   
   wsserver.on('connection', (ws) => {
     console.log('Connection established');
     ws.on('message', async (data) => {
-      console.log('--> %s', data);
+      console.log(`--> ${data}`);
       try {
 
         const result = await handleCommand(data.toString());

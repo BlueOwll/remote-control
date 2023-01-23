@@ -1,9 +1,10 @@
-import { DIRECTIONS, drawCircle, drawRect, getMousePosition, moveMouse, POSITION } from "./remote-exec";
+import { DIRECTIONS, drawCircle, drawRect, getMousePosition, moveMouse, POSITION, prntScr } from "./remote-exec";
 
 enum COMMANDS {
   mouse = "mouse",
   draw = "draw",
   prnt = "prnt",
+  scrn =  "scrn"
 }
 
 enum SHAPES {
@@ -81,4 +82,7 @@ const handleDraw = async (paramsInput: string) => {
       throw new Error("Invalid args");
   }
 };
-const handlePrnt = async (param: string) => {};
+const handlePrnt = async (param: string) => {
+  if(param !== COMMANDS.scrn) throw new Error('Wrong command');
+  return await prntScr();
+};

@@ -1,4 +1,4 @@
-import { mouse, left, right, up, down, Point, Button, straightTo } from "@nut-tree/nut-js";
+import { mouse, left, right, up, down, Point, Button, straightTo, Region, screen } from "@nut-tree/nut-js";
 
 //export const DIRECTIONS_SET = new Set([ 'left', 'right', 'up', 'down']);
 export enum DIRECTIONS {
@@ -9,6 +9,8 @@ export enum DIRECTIONS {
 }
 
 export const POSITION = 'position';
+
+const regionToPrntScrSize = 200;
 
 
 export const moveMouse = async (dir: string, value: string) => {
@@ -44,39 +46,33 @@ export const drawCircle = async (value: string) => {
   const x0 = origin.x;
   const y0 = origin.y;
   
-  let targetPoint = origin;
-
-
+ 
   await mouse.pressButton(Button.LEFT);
 
   for (let x = 0; x <= radius; x+=1) {
     const x1 = radius - x;
-    const nextY = Math.round(Math.sqrt(radius *radius - x1 * x1));
-    targetPoint = new Point(x+ x0, y0 + nextY);
-    await mouse.move(straightTo(targetPoint));
+    const nextY = Math.round(Math.sqrt(radius *radius - x1 * x1));    
+    await mouse.move(straightTo(new Point(x+ x0, y0 + nextY)));
     
   }
 
   for (let x = 0; x <= radius; x+=1) {
     const x1 = radius - x;
     const nextY = Math.round(Math.sqrt(radius *radius - x * x));
-    targetPoint = new Point(x+ x0 + radius, nextY + y0);
-    await mouse.move(straightTo(targetPoint));
+    await mouse.move(straightTo(new Point(x+ x0 + radius, nextY + y0)));
     
   }
 
 
   for (let x = radius; x >= 0; x-=1) {
     const nextY = Math.round(Math.sqrt(radius *radius - x * x));
-    targetPoint = new Point(x+ x0 +radius ,  y0 - nextY);
-    await mouse.move(straightTo(targetPoint));
+    await mouse.move(straightTo(new Point(x+ x0 +radius ,  y0 - nextY)));
   }
 
   for (let x = radius; x >= 0; x-=1) {
     const x1 = radius - x;
     const nextY = Math.round(Math.sqrt(radius *radius - x1 * x1));
-    targetPoint = new Point(x+ x0 ,  y0 - nextY);
-    await mouse.move(straightTo(targetPoint));
+    await mouse.move(straightTo(new Point(x+ x0 ,  y0 - nextY)));
   }
 
   await mouse.releaseButton(Button.LEFT);
@@ -99,4 +95,19 @@ export const drawRect = async(value1: string, value2: string) => {
   await mouse.move(straightTo(new Point(x0 ,  y0)));
 
   await mouse.releaseButton(Button.LEFT);
+}
+
+export const prntScr = async () => {
+  const origin = await mouse.getPosition();
+  const x0 = origin.x;
+  const y0 = origin.y;
+
+  const region = new Region(
+    x0 - Math.round(regionToPrntScrSize / 2),
+    y0 - Math.round(regionToPrntScrSize / 2),
+    regionToPrntScrSize,
+    regionToPrntScrSize
+    );
+  const img = screen.grabRegion(region);
+
 }
