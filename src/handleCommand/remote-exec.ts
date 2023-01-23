@@ -43,9 +43,7 @@ export const drawCircle = async (value: string) => {
   const radius = Number(value);
   if (isNaN(radius)) throw new Error('Invalid args');
   
-  const origin = await mouse.getPosition();
-  const x0 = origin.x;
-  const y0 = origin.y;
+  const { x: x0, y: y0} = await mouse.getPosition();
   
  
   await mouse.pressButton(Button.LEFT);
@@ -85,9 +83,7 @@ export const drawRect = async(value1: string, value2: string) => {
   const width = Number(value1);
   const height = Number(value2);
   if (isNaN(width) || isNaN(height)) throw new Error('Invalid args');
-  const origin = await mouse.getPosition();
-  const x0 = origin.x;
-  const y0 = origin.y;
+  const { x: x0, y: y0} = await mouse.getPosition();
   
   await mouse.pressButton(Button.LEFT);
   await mouse.move(straightTo(new Point(width + x0 ,  y0)));
@@ -100,9 +96,7 @@ export const drawRect = async(value1: string, value2: string) => {
 
 export const prntScr = async () => {
   const scrnShotFile = 'screen-shot.png';
-  const origin = await mouse.getPosition();
-  const x0 = origin.x;
-  const y0 = origin.y;
+  const { x: x0, y: y0} = await mouse.getPosition();
 
   const region = new Region(
     x0 - Math.round(regionToPrntScrSize / 2),
